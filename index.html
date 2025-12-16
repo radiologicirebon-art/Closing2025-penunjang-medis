@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Spinner Tukar Kado | Closing 2025</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: radial-gradient(circle, #0d6efd, #198754);
+      color: #fff;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+    }
+    #spinnerBox {
+      margin-top: 50px;
+      font-size: 36px;
+      font-weight: bold;
+      background: rgba(255,255,255,0.15);
+      padding: 40px;
+      border-radius: 24px;
+    }
+    #spinText {
+      font-size: 32px;
+    }
+    #result {
+      font-size: 48px;
+      margin-top: 20px;
+      color: #ffc107;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1 class="mt-4 fw-bold">🎁 Spinner Tukar Kado</h1>
+  <p class="fs-5">Closing 2025 Penunjang Medis RS Mitra Plumbon</p>
+
+  <div id="spinnerBox">
+    <div id="spinText">Siap diundi 🎉</div>
+    <div id="result"></div>
+  </div>
+
+  <div class="mt-4">
+    <button id="spinBtn" class="btn btn-warning btn-lg me-2">
+      🎲 SPIN SEKARANG
+    </button>
+
+    <button id="fullscreenBtn" class="btn btn-light btn-lg">
+      ⛶ FULLSCREEN
+    </button>
+  </div>
+</div>
+
+<!-- Firebase v9 -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  // 🔥 GANTI SESUAI FIREBASE ANDA
+  const firebaseConfig = {
+    apiKey: "ISI_API_KEY",
+    authDomain: "closing-2025-penunjang-medis.firebaseapp.com",
+    databaseURL: "https://closing-2025-penunjang-medis-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "closing-2025-penunjang-medis",
+    storageBucket: "closing-2025-penunjang-medis.appspot.com",
+    messagingSenderId: "ISI_SENDER_ID",
+    appId: "ISI_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  let peserta = [];
+
+  // 🔄 Ambil data realtime
+  onValue(ref(db, "daftar_hadir"), snapshot => {
+    peserta = [];
+    snapshot.forEach(child => {
+      peserta.push({
+        key: child.key,
+        nama: child.val().nama,
+        unit: child.val().unit
+      });
+    });
+  });
+
+  // 🎲 Spin logic
+  document.getElementById("spinBtn").onclick = () => {
+    if (peserta.length === 0) {
+      alert("Belum ada peserta.");
+      return;
+    }
+
+    let i = 0;
+    const interval = setInterval(() => {
+      const random = peserta[Math.floor(Math.random() * peserta.length)];
+      document.getElementById("spinText").innerText =
+        random.nama + " (" + random.unit + ")";
+      i++;
+
+      if (i > 20) {
+        clearInterval(interval);
+        tampilkanPemenang(random);
+      }
+    }, 100);
+  };
+
+  function tampilkanPemenang(pemenang) {
+    document.getElementById("result").innerText =
+      "🎉 " + pemenang.nama + " - " + pemenang.unit;
+
+    // ❌ hapus supaya tidak menang 2x
+    remove(ref(db, "daftar_hadir/" + pemenang.key));
+  }
+
+  // ⛶ Fullscreen
+  document.getElementById("fullscreenBtn").onclick = () => {
+    const elem = document.documentElement;
+    if (!document.fullscreenElement) {
+      elem.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+</script>
+
+</body>
+</html>
