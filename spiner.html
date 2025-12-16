@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Spinner Tukar Kado | Closing 2025</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: #0d6efd;
+      color: #fff;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    .box {
+      background: rgba(255,255,255,.15);
+      padding: 40px;
+      border-radius: 20px;
+      margin-top: 60px;
+    }
+    #nama {
+      font-size: 42px;
+      font-weight: bold;
+      color: #ffc107;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h3 class="mt-4">🎁 Spinner Tukar Kado</h3>
+  <p>Closing 2025 Penunjang Medis</p>
+
+  <div class="box">
+    <div id="nama">Siap diundi</div>
+  </div>
+
+  <div class="mt-4">
+    <button id="spin" class="btn btn-warning btn-lg me-2">SPIN</button>
+    <button id="full" class="btn btn-light btn-lg">FULLSCREEN</button>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase, ref, onValue, remove }
+  from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "ISI_API_KEY",
+    authDomain: "closing-2025-penunjang-medis.firebaseapp.com",
+    databaseURL: "https://closing-2025-penunjang-medis-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "closing-2025-penunjang-medis",
+    storageBucket: "closing-2025-penunjang-medis.appspot.com",
+    messagingSenderId: "ISI_SENDER_ID",
+    appId: "ISI_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  let data = [];
+
+  onValue(ref(db, "daftar_hadir"), snap => {
+    data = [];
+    snap.forEach(c => data.push({ key: c.key, ...c.val() }));
+  });
+
+  spin.onclick = () => {
+    if (!data.length) return alert("Belum ada peserta");
+
+    let i = 0;
+    const anim = setInterval(() => {
+      const r = data[Math.floor(Math.random() * data.length)];
+      nama.innerText = r.nama + " (" + r.unit + ")";
+      if (++i > 20) {
+        clearInterval(anim);
+        remove(ref(db, "daftar_hadir/" + r.key));
+      }
+    }, 100);
+  };
+
+  full.onclick = () => {
+    !document.fullscreenElement
+      ? document.documentElement.requestFullscreen()
+      : document.exitFullscreen();
+  };
+</script>
+
+</body>
+</html>
