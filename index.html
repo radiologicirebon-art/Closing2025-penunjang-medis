@@ -2,48 +2,30 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Undangan Closing 2025 | Penunjang Medis</title>
+  <title>Closing 2025 | Penunjang Medis</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
   <style>
-    body {
-      background: #f4f6f9;
-      font-family: "Segoe UI", Arial, sans-serif;
-    }
-    .card {
-      border-radius: 14px;
-      box-shadow: 0 8px 20px rgba(0,0,0,.08);
-    }
-    .badge-theme {
-      background: #0d6efd;
-    }
+    body { background:#f4f6f9; font-family:Segoe UI,Arial; }
+    .card { border-radius:14px; box-shadow:0 8px 20px rgba(0,0,0,.08); }
   </style>
 </head>
-
 <body>
 
 <div class="container py-5">
 
-  <!-- HEADER -->
+  <!-- UNDANGAN -->
   <div class="text-center mb-4">
     <h3 class="fw-bold">Undangan Rapat</h3>
     <h5>Closing 2025 Penunjang Medis</h5>
-    <span class="badge badge-theme text-white mt-2">
+    <span class="badge bg-primary mt-2">
       Finish Strong 2025, Start Smart 2026
     </span>
   </div>
 
-  <!-- UNDANGAN -->
   <div class="card p-4 mb-4">
-    <p>
-      Halo rekan-rekan Penunjang Medis,<br>
-      Kami mengundang Bapak/Ibu untuk hadir dalam rapat persiapan Closing Tahun 2025.
-    </p>
-
     <table class="table table-borderless mb-0">
-      <tr><td width="30%">Hari / Tanggal</td><td>: Rabu, 17 Desember 2025</td></tr>
+      <tr><td>Hari / Tanggal</td><td>: Rabu, 17 Desember 2025</td></tr>
       <tr><td>Waktu</td><td>: 13.00 WIB – selesai</td></tr>
       <tr><td>Tempat</td><td>: Ruang Perpus 3</td></tr>
       <tr><td>Agenda</td>
@@ -56,36 +38,35 @@
   </div>
 
   <!-- DAFTAR HADIR -->
-  <div class="card p-4">
-    <h5 class="fw-bold mb-3">Daftar Hadir</h5>
-
+  <div class="card p-4 mb-4">
+    <h5 class="fw-bold">Daftar Hadir</h5>
     <form id="hadirForm">
-      <div class="mb-3">
-        <label class="form-label">Nama</label>
-        <input type="text" id="nama" class="form-control" required>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Unit</label>
-        <input type="text" id="unit" class="form-control" required>
-      </div>
-
-      <button class="btn btn-primary w-100">
-        Konfirmasi Kehadiran
-      </button>
+      <input id="nama" class="form-control mb-3" placeholder="Nama" required>
+      <input id="unit" class="form-control mb-3" placeholder="Unit" required>
+      <button class="btn btn-primary w-100">Konfirmasi Kehadiran</button>
     </form>
-
-    <div id="info" class="text-success mt-3" style="display:none;">
-      Terima kasih, kehadiran Anda telah tercatat.
+    <div id="info" class="text-success mt-2" style="display:none">
+      Kehadiran berhasil dicatat.
     </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="card p-4">
+    <h5 class="fw-bold mb-3">📊 Dashboard Kehadiran</h5>
+    <p>Total Hadir: <b id="total">0</b> orang</p>
+    <table class="table table-sm">
+      <thead>
+        <tr><th>Nama</th><th>Unit</th></tr>
+      </thead>
+      <tbody id="list"></tbody>
+    </table>
   </div>
 
 </div>
 
-<!-- FIREBASE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getDatabase, ref, push, serverTimestamp }
+  import { getDatabase, ref, push, onValue, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
   const firebaseConfig = {
@@ -101,17 +82,23 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  hadirForm.addEventListener("submit", e => {
+  hadirForm.onsubmit = e => {
     e.preventDefault();
-
-    push(ref(db, "daftar_hadir"), {
-      nama: nama.value.trim(),
-      unit: unit.value.trim(),
-      waktu: serverTimestamp()
+    push(ref(db,"daftar_hadir"), {
+      nama:nama.value, unit:unit.value, waktu:serverTimestamp()
     });
-
     hadirForm.reset();
-    info.style.display = "block";
+    info.style.display="block";
+  };
+
+  onValue(ref(db,"daftar_hadir"), snap => {
+    list.innerHTML="";
+    let total=0;
+    snap.forEach(c=>{
+      total++;
+      list.innerHTML+=`<tr><td>${c.val().nama}</td><td>${c.val().unit}</td></tr>`;
+    });
+    document.getElementById("total").innerText=total;
   });
 </script>
 
