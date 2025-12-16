@@ -1,105 +1,179 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Closing 2025 | Penunjang Medis</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body { background:#f4f6f9; font-family:Segoe UI,Arial; }
-    .card { border-radius:14px; box-shadow:0 8px 20px rgba(0,0,0,.08); }
-  </style>
+<meta charset="UTF-8">
+<title>Closing 2025 | Penunjang Medis RS Mitra Plumbon</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body { background:#f4f6f9; font-family:Segoe UI,Arial; }
+.card { border-radius:16px; box-shadow:0 8px 20px rgba(0,0,0,.08); }
+.hidden { display:none; }
+.spinner-box {
+  background:#0d6efd; color:#fff;
+  padding:40px; border-radius:20px;
+}
+</style>
 </head>
+
 <body>
+<div class="container py-4">
 
-<div class="container py-5">
-
-  <!-- UNDANGAN -->
-  <div class="text-center mb-4">
-    <h3 class="fw-bold">Undangan Rapat</h3>
-    <h5>Closing 2025 Penunjang Medis</h5>
-    <span class="badge bg-primary mt-2">
-      Finish Strong 2025, Start Smart 2026
-    </span>
+<!-- MENU -->
+<div class="d-flex justify-content-between mb-3">
+  <h4 class="fw-bold">Closing 2025</h4>
+  <div>
+    <button class="btn btn-outline-primary btn-sm" onclick="showSection('main')">🏠 Utama</button>
+    <button class="btn btn-outline-dark btn-sm" onclick="showSection('spinner')">🎁 Spinner</button>
   </div>
+</div>
 
-  <div class="card p-4 mb-4">
-    <table class="table table-borderless mb-0">
-      <tr><td>Hari / Tanggal</td><td>: Rabu, 17 Desember 2025</td></tr>
-      <tr><td>Waktu</td><td>: 13.00 WIB – selesai</td></tr>
-      <tr><td>Tempat</td><td>: Ruang Perpus 3</td></tr>
-      <tr><td>Agenda</td>
-        <td>
-          • Konsep & Rangkaian Acara Closing 2025<br>
-          • Pembagian Peran & Timeline Kegiatan
-        </td>
-      </tr>
-    </table>
-  </div>
+<!-- ================= MAIN ================= -->
+<div id="main">
 
-  <!-- DAFTAR HADIR -->
-  <div class="card p-4 mb-4">
-    <h5 class="fw-bold">Daftar Hadir</h5>
-    <form id="hadirForm">
-      <input id="nama" class="form-control mb-3" placeholder="Nama" required>
-      <input id="unit" class="form-control mb-3" placeholder="Unit" required>
-      <button class="btn btn-primary w-100">Konfirmasi Kehadiran</button>
-    </form>
-    <div id="info" class="text-success mt-2" style="display:none">
-      Kehadiran berhasil dicatat.
-    </div>
-  </div>
+<!-- UNDANGAN -->
+<div class="card p-4 mb-4 text-center">
+  <h5 class="fw-bold">Undangan Rapat</h5>
+  <h6>Penunjang Medis RS Mitra Plumbon</h6>
+  <span class="badge bg-primary mt-2">Finish Strong 2025, Start Smart 2026</span>
+</div>
 
-  <!-- DASHBOARD -->
-  <div class="card p-4">
-    <h5 class="fw-bold mb-3">📊 Dashboard Kehadiran</h5>
-    <p>Total Hadir: <b id="total">0</b> orang</p>
-    <table class="table table-sm">
-      <thead>
-        <tr><th>Nama</th><th>Unit</th></tr>
-      </thead>
-      <tbody id="list"></tbody>
-    </table>
-  </div>
+<div class="card p-4 mb-4">
+<table class="table table-borderless mb-0">
+<tr><td>Hari / Tanggal</td><td>: Rabu, 17 Desember 2025</td></tr>
+<tr><td>Waktu</td><td>: 13.00 WIB – selesai</td></tr>
+<tr><td>Tempat</td><td>: Ruang Perpus 3</td></tr>
+<tr><td>Agenda</td>
+<td>
+• Konsep & Rangkaian Acara Closing 2025<br>
+• Pembagian Peran & Timeline Kegiatan
+</td>
+</tr>
+</table>
+</div>
+
+<!-- DAFTAR HADIR -->
+<div class="card p-4 mb-4">
+<h5 class="fw-bold">Daftar Hadir</h5>
+<form id="hadirForm">
+  <input id="nama" class="form-control mb-3" placeholder="Nama" required>
+  <input id="unit" class="form-control mb-3" placeholder="Unit" required>
+  <button class="btn btn-primary w-100">Konfirmasi Kehadiran</button>
+</form>
+<div id="info" class="text-success mt-2 hidden">Kehadiran berhasil dicatat.</div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="card p-4">
+<h5 class="fw-bold">📊 Dashboard Kehadiran</h5>
+<p>Total Hadir: <b id="total">0</b> orang</p>
+<table class="table table-sm">
+<thead><tr><th>Nama</th><th>Unit</th></tr></thead>
+<tbody id="list"></tbody>
+</table>
+</div>
 
 </div>
 
+<!-- ================= SPINNER ================= -->
+<div id="spinner" class="hidden text-center">
+
+<div class="spinner-box my-4">
+<h4>🎁 Spinner Tukar Kado</h4>
+<h1 id="spinNama" class="my-4">Siap Diundi</h1>
+
+<button id="spinBtn" class="btn btn-warning btn-lg me-2">SPIN</button>
+<button class="btn btn-light btn-lg" onclick="toggleFull()">FULLSCREEN</button>
+</div>
+
+<div class="card p-4">
+<h5 class="fw-bold">🏆 Riwayat Pemenang</h5>
+<ul id="winnerList" class="list-group"></ul>
+</div>
+
+</div>
+
+</div>
+
+<!-- ================= FIREBASE ================= -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import {
+  getDatabase, ref, push, onValue, remove, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "ISI_API_KEY",
-    authDomain: "closing-2025-penunjang-medis.firebaseapp.com",
-    databaseURL: "https://closing-2025-penunjang-medis-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "closing-2025-penunjang-medis",
-    storageBucket: "closing-2025-penunjang-medis.appspot.com",
-    messagingSenderId: "ISI_SENDER_ID",
-    appId: "ISI_APP_ID"
-  };
+/* 🔥 GANTI SESUAI FIREBASE ANDA */
+const firebaseConfig = {
+  apiKey: "ISI_API_KEY",
+  authDomain: "closing-2025-penunjang-medis.firebaseapp.com",
+  databaseURL: "https://closing-2025-penunjang-medis-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "closing-2025-penunjang-medis",
+  storageBucket: "closing-2025-penunjang-medis.appspot.com",
+  messagingSenderId: "ISI_SENDER_ID",
+  appId: "ISI_APP_ID"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-  hadirForm.onsubmit = e => {
-    e.preventDefault();
-    push(ref(db,"daftar_hadir"), {
-      nama:nama.value, unit:unit.value, waktu:serverTimestamp()
-    });
-    hadirForm.reset();
-    info.style.display="block";
-  };
-
-  onValue(ref(db,"daftar_hadir"), snap => {
-    list.innerHTML="";
-    let total=0;
-    snap.forEach(c=>{
-      total++;
-      list.innerHTML+=`<tr><td>${c.val().nama}</td><td>${c.val().unit}</td></tr>`;
-    });
-    document.getElementById("total").innerText=total;
+/* === DAFTAR HADIR === */
+hadirForm.onsubmit = e => {
+  e.preventDefault();
+  push(ref(db,"daftar_hadir"), {
+    nama:nama.value,
+    unit:unit.value,
+    waktu:serverTimestamp()
   });
+  hadirForm.reset();
+  info.classList.remove("hidden");
+};
+
+/* === DASHBOARD === */
+let peserta = [];
+
+onValue(ref(db,"daftar_hadir"), snap=>{
+  list.innerHTML="";
+  peserta=[];
+  let c=0;
+  snap.forEach(x=>{
+    c++;
+    peserta.push({key:x.key,...x.val()});
+    list.innerHTML+=`<tr><td>${x.val().nama}</td><td>${x.val().unit}</td></tr>`;
+  });
+  total.innerText=c;
+});
+
+/* === SPINNER === */
+spinBtn.onclick=()=>{
+  if(!peserta.length) return alert("Peserta habis");
+  const p=peserta[Math.floor(Math.random()*peserta.length)];
+  spinNama.innerText=p.nama+" ("+p.unit+")";
+  push(ref(db,"pemenang"),{nama:p.nama,unit:p.unit});
+  remove(ref(db,"daftar_hadir/"+p.key));
+};
+
+onValue(ref(db,"pemenang"), snap=>{
+  winnerList.innerHTML="";
+  snap.forEach(x=>{
+    winnerList.innerHTML+=`<li class="list-group-item">${x.val().nama} - ${x.val().unit}</li>`;
+  });
+});
+</script>
+
+<!-- ================= UI SCRIPT ================= -->
+<script>
+function showSection(id){
+  document.getElementById("main").classList.add("hidden");
+  document.getElementById("spinner").classList.add("hidden");
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function toggleFull(){
+  !document.fullscreenElement
+    ? document.documentElement.requestFullscreen()
+    : document.exitFullscreen();
+}
 </script>
 
 </body>
